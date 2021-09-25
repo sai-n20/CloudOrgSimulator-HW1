@@ -26,7 +26,7 @@ class datacenterTest extends AnyFunSuite {
     val configFileName: String = "SchedulerComparisons.conf"
     val config: Config = ConfigFactory.load(configFileName)
     val vmConfig = new vmUtil(configFileName)
-    val vm: util.List[Vm] = vmConfig.makeVMs(new CloudletSchedulerSpaceShared(), config.getInt("entryPoint.vmAmount"))
+    val vm: util.List[Vm] = vmConfig.makeVMs(new CloudletSchedulerSpaceShared(), config.getInt("entryPoint.datacenter.vmAmount"))
     vm shouldBe a [List[Vm]]
     vm.get(0) shouldBe a [Vm]
   }
@@ -72,9 +72,9 @@ class datacenterTest extends AnyFunSuite {
     datacenterConfig.createDatacenter(cloudsim, new VmAllocationPolicySimple, new VmSchedulerSpaceShared)
     val broker = new DatacenterBrokerSimple(cloudsim)
 
-    val vm: util.List[Vm] = vmConfig.makeVMs(new CloudletSchedulerSpaceShared(), config.getInt("entryPoint.vmAmount"))
+    val vm: util.List[Vm] = vmConfig.makeVMs(new CloudletSchedulerSpaceShared(), config.getInt("entryPoint.datacenter.vmAmount"))
     broker.submitVmList(vm)
-    val cloudlets: util.List[Cloudlet] = cloudletConfig.makeCloudlets(new UtilizationModelFull(), config.getInt("entryPoint.cloudletsAmount"))
+    val cloudlets: util.List[Cloudlet] = cloudletConfig.makeCloudlets(new UtilizationModelFull(), config.getInt("entryPoint.datacenter.cloudletsAmount"))
     broker.submitCloudletList(cloudlets)
     cloudsim.start()
 
@@ -95,7 +95,7 @@ class datacenterTest extends AnyFunSuite {
 
     val vm: Vm = vmConfig.makeVM(new CloudletSchedulerSpaceShared())
     broker.submitVm(vm)
-    val cloudlets: util.List[Cloudlet] = cloudletConfig.makeCloudlets(new UtilizationModelFull(), config.getInt("entryPoint.cloudletsAmount"))
+    val cloudlets: util.List[Cloudlet] = cloudletConfig.makeCloudlets(new UtilizationModelFull(), config.getInt("entryPoint.datacenter.cloudletsAmount"))
     broker.submitCloudletList(cloudlets)
     cloudsim.start()
 
