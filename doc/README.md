@@ -45,6 +45,63 @@ The resources directory contains the respective configuration file for each of t
 
 1. Scheduler Comparisons- A single host, single VM and 2 cloudlets are utilized here to demonstrate the differences between the schedulers. To elaborate on a previous statement, the utilization model for the cloudlets was changed here as using the standard `UtilizationModelFull()` led to cloudlets waiting for RAM and Bandwidth in `TimeSharedScheduler` for the cloudlets. This makes sense as the first cloudlet to begin executing will take up all the resources, while the others will starve. This problem does not occur on `SpaceSharedScheduler` for the cloudlets.
 
+#### SpaceShared scheduler for both VM and cloudlets with UtilizationModelFull for cloudlets
 <p align="center">
   <img src="Scheduler1.jpg" />
 </p>
+
+#### TimeShared scheduler for both VM and cloudlets with UtilizationModelStochastic for cloudlets
+<p align="center">
+  <img src="Scheduler2.jpg" />
+</p>
+
+2. Allocation Comparisons- 8 hosts, 16 VM's and 16 cloudlets are used here to find out the differences among the allocation policies. The logged messages helped to understand how the policies worked differently.
+
+#### Round Robin VM allocation policy
+<p align="center">
+  <img src="Allocation1.jpg" />
+</p>
+
+#### BestFit VM allocation policy
+<p align="center">
+  <img src="Allocation2.jpg" />
+</p>
+
+3. Network simulation- The primary goal here was to understand how the networking works within a datacenter with regards to the various different types of switches and their interconnections. This was simulated using a datacenter containing 2 hosts, 8 edge switches each with 4 ports, 3 aggregate switches each with 4 ports and a root switch with 4 ports. A load of 40 cloudlets was given to the simulation here. Here are the findings,
+
+<p align="center">
+  <img src="Network1.jpg" />
+</p>
+<p align="center">
+  <img src="Network2.jpg" />
+</p>
+
+4. Cost simulation- 2 competitive datacenters were set up with varying costs per feature. The goal here was to analyze the costing for running a cloudlet on each of the datacenters to enable a clever broker to develop a heuristic to provide middleman services.
+
+#### Datacenter with higher cost per second and higher MIPS
+<p align="center">
+  <img src="Cost1.jpg" />
+</p>
+
+#### Datacenter with higher cost per storage and higher memory
+<p align="center">
+  <img src="Cost2.jpg" />
+</p>
+
+5. Model simulation- The final task consists of creating 3 different datacenters for each of IaaS, PaaS and SaaS idealogies. This was done by assuming a methodology of providing user configuration apart from the datacenter "stock" configuration depending upon the idealogy. The cloud provider would initialize their datacenter completely with their own configuraion, which an IaaS user for example would be able to modify large parts of to suit their need in regards to the workload. The concerned IaaS user can increase/decrease their VM's or make their VM's more/less powerful. A series of jobs were then sent to the datacenters and simulated.
+
+<p align="center">
+  <img src="Model1.jpg" />
+</p>
+
+
+### Understandings
+
+This project cleared a lot of concepts with regards to a task and VM allocation as well as scheduling. In terms of being a broker and managing such a service, some learnings were:
++ Selecting the full utilization model for a cloudlet is very contigent upon the cloudlets scheduling policy. If it is a TimeShared policy, some cloudlets will be left starving for resources and bog down the system without even executing the task.
+
++ Over provisioning resources is comparatively "easier" as you can just throw more hosts at the problem, which are cheap. But a wise heuristic set by determining average workload lengths, workload intensities and timings will help scale back on these costs which add up quickly. Under provisioning is ofcourse very detrimental and might create a negative feedback loop of angry customers not having their jobs completed and you losing computation time as well as your customer base.
+
++ Providing IaaS is more worry-free as you are only providing "bare metal". Everything else is the cloud consumer's responsibility. Thus, there aren't a lot of factors to consider in terms of pricing the IaaS model. On the other hand, all the talk about over and under provisioning comes in effect for SaaS doubly so.
+
++ It was also noticed that in the first simulation with Scheduler comparisons and specifically the TimeShared cloudlet scheduler with a Stochastic utilization model, the execution time of the cloudlets will vary with each run of the program.
