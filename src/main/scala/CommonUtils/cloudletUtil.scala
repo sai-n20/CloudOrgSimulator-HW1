@@ -1,5 +1,6 @@
 package CommonUtils
 
+import HelperUtils.CreateLogger
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.cloudbus.cloudsim.cloudlets.Cloudlet
@@ -24,6 +25,8 @@ class cloudletUtil(configFile: String) {
     (1 to amount).map {_ =>
       cloudletList.add(new CloudletSimple(timeLength, PE, utilModel).setSizes(size))
     }
+    val logger = CreateLogger(classOf[cloudletUtil])
+    logger.info("{} cloudlet(s) successfully created", amount)
     return cloudletList
   }
 }

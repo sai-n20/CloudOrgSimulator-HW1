@@ -1,8 +1,10 @@
 package CommonUtils
 
+import HelperUtils.CreateLogger
 import com.typesafe.config.{Config, ConfigFactory}
 import org.cloudbus.cloudsim.schedulers.cloudlet.CloudletScheduler
 import org.cloudbus.cloudsim.vms.{Vm, VmSimple}
+
 import java.util
 import java.util.{ArrayList, List}
 
@@ -37,6 +39,8 @@ class vmUtil(configFile: String, userConfigFile: String = "") {
     (1 to amount).map {_ =>
       vmList.add(makeVM(cloudletScheduler))
     }
+    val logger = CreateLogger(classOf[vmUtil])
+    logger.info("{} VM(s) successfully created", amount)
     return vmList
   }
 }

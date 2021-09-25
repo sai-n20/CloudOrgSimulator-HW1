@@ -69,6 +69,7 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
     (1 to host.PE).map {_ =>
       PElist.add(new PeSimple(host.mips))
     }
+    logger.info("{} PE(s) successfully created", host.PE)
     return PElist
   }
 
@@ -92,6 +93,7 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
           e.printStackTrace()
       }
     }
+    logger.info("{} host(s) successfully created", hosts)
     return hostList
   }
 
@@ -119,6 +121,7 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
         datacenter.addSwitch(edgeSwitch)
         edgeSwitches.add(edgeSwitch)
     }
+    logger.info("{} edge switch(es) successfully created", conf.getInt("edgeSwitch.amount"))
 
     //Create the required amount of aggregate switches as specified in the config file
     val aggregateSwitches: List[AggregateSwitch] = new util.ArrayList[AggregateSwitch]
@@ -132,6 +135,7 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
         datacenter.addSwitch(aggregateSwitch)
         aggregateSwitches.add(aggregateSwitch)
     }
+    logger.info("{} aggregate switch(es) successfully created", conf.getInt("aggregateSwitch.amount"))
 
     //Create a root switch and set its configuration
     val rootSwitch: RootSwitch = new RootSwitch(sim, datacenter)
@@ -140,19 +144,21 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
     rootSwitch.setSwitchingDelay(conf.getInt("rootSwitch.switchingDelay"))
     rootSwitch.setDownlinkBandwidth(conf.getInt("rootSwitch.bw"))
     datacenter.addSwitch(rootSwitch)
-
+    logger.info("{} root switch(es) successfully created", conf.getInt("rootSwitch.amount"))
 
     //Connecting edge switches to hosts
     datacenter.getHostList[NetworkHost].forEach(e => {
       val switchIndex = getSwitchIndex(e, conf.getInt("edgeSwitch.ports"))
       edgeSwitches.get(switchIndex).connectHost(e)
     })
+    logger.info("Connected {} edge switch(es) to {} hosts", conf.getInt("edgeSwitch.amount"), hosts)
 
     //Connect root switches to aggregate switches
     for (aggregateSwitch <- aggregateSwitches.asScala) {
       aggregateSwitch.getUplinkSwitches.add(rootSwitch)
       rootSwitch.getDownlinkSwitches.add(aggregateSwitch)
     }
+    logger.info("Connected {} aggregate switch(es) to {} root switch(es)", conf.getInt("aggregateSwitch.amount"), conf.getInt("rootSwitch.amount"))
   }
 
   //Creates a datacenter for the provided CloudSim instance. VM allocation policy and VM scheduler are also provided to be passed on to the datacenter and the host respectively
@@ -175,7 +181,7 @@ class DatacenterUtil(configFile: String, host: hostUtil, vm: vmUtil, cloudlet: c
       .setCostPerStorage(costByStorage)
       .setArchitecture(arch)
       .setOs(os)
-
+    logger.info("Created a {} datacenter", dcType)
     return datacenter
   }
 }

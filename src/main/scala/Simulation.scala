@@ -11,10 +11,10 @@ object Simulation:
   @main def runSimulation =
     logger.info("Constructing a cloud model...")
     SchedulerComparisons.Start()
-//    AllocationComparisons.Start()
-//    NetworkSimulation.Start()
-//    CostSimulation.Start()
-//    ModelSimulations.Start()
+    AllocationComparisons.Start()
+    NetworkSimulation.Start()
+    CostSimulation.Start()
+    ModelSimulations.Start()
     logger.info("Finished cloud simulation...")
 
 class Simulation
