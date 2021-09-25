@@ -46,5 +46,5 @@ The resources directory contains the respective configuration file for each of t
 1. Scheduler Comparisons- A single host, single VM and 2 cloudlets are utilized here to demonstrate the differences between the schedulers. To elaborate on a previous statement, the utilization model for the cloudlets was changed here as using the standard `UtilizationModelFull()` led to cloudlets waiting for RAM and Bandwidth in `TimeSharedScheduler` for the cloudlets. This makes sense as the first cloudlet to begin executing will take up all the resources, while the others will starve. This problem does not occur on `SpaceSharedScheduler` for the cloudlets.
 
 <p align="center">
-  <img src="Scheduler1.jpg" style="width: 50%;" />
+  <img src="Scheduler1.jpg" />
 </p>
